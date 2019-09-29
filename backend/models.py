@@ -42,12 +42,15 @@ class User(db.Model, UserMixin):
         return f"User ID {self.id}"
 
 
+
 class Port(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     port_id = db.Column(db.Integer, unique=False, nullable=False)
     cargo = db.Column(db.Integer, unique=False, default=0)
     food = db.Column(db.Integer, unique=False, default=0)
     is_dest = db.Column(db.Boolean, unique=False, default=False)
+    x_coord = db.Column(db.Integer, unique=False, default=False)
+    y_coord = db.Column(db.Integer, unique=False, default=False)
     game_id = db.Column(db.Integer, db.ForeignKey('game.id'), nullable=False)
 
 
