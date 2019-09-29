@@ -40,3 +40,31 @@ class User(db.Model, UserMixin):
 
     def __repr__(self):
         return f"User ID {self.id}"
+
+
+class Port(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    port_id = db.Column(db.Integer, unique=False, nullable=False)
+    cargo = db.Column(db.Integer, unique=False, default=0)
+    food = db.Column(db.Integer, unique=False, default=0)
+    is_dest = db.Column(db.Boolean, unique=False, default=False)
+    game_id = db.Column(db.Integer, db.ForeignKey('game.id'), nullable=False)
+
+
+class Ship(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    ship_id = db.Column(db.Integer, default=0)
+    life_points = db.Column(db.Integer, unique=False, default=10)
+    cargo = db.Column(db.Integer, unique=False, default=0)
+    cannon = db.Column(db.Integer, unique=False, default=1)
+    crew = db.Column(db.Integer, unique=False, default=1)
+    food = db.Column(db.Integer, unique=False, default=0)
+    speed = db.Column(db.Integer, unique=False, default=1)
+    is_bot = db.Column(db.Boolean, unique=False, default=False)
+    home_port = db.Column(db.Integer, db.ForeignKey('port.port_id'), unique=False, default=0)
+    game_id = db.Column(db.Integer, db.ForeignKey('game.id'), nullable=False)
+
+
+class Game(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
