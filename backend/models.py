@@ -60,7 +60,6 @@ class LoggedInUser(db.Model, UserMixin):
         self.email = email
         self.auth_token = auth_token
 
-
 class Port(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     port_id = db.Column(db.Integer, unique=False, nullable=False)
@@ -69,6 +68,8 @@ class Port(db.Model):
     coor_x = db.Column(db.Integer, default=0)
     coor_y = db.Column(db.Integer, default=0)
     is_dest = db.Column(db.Boolean, unique=False, default=False)
+    x_coord = db.Column(db.Integer, unique=False, default=False)
+    y_coord = db.Column(db.Integer, unique=False, default=False)
     game_id = db.Column(db.Integer, db.ForeignKey('game.id'), nullable=False)
 
 
