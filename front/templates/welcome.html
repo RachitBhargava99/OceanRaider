@@ -9,17 +9,44 @@
 
 	<form action="/action_page.php">
 	  Pirate name:<br>
-	  <input type="text" name="firstname" value="Jeff">
+	  <input type="text" name="firstname" id="playerName" value="Jeff">
 	  <br>
 	  Ship name:<br>
-	  <input type="text" name="lastname" value="Bloomberg">
+	  <input type="text" name="lastname" id="shipName" value="Bloomberg">
 	  <br>
 	  Difficulty:<br>
-	  <input type="radio" name="difficulty" value="easy" checked> Easy<br>
-	  <input type="radio" name="difficulty" value="medium"> Medium<br>
-	  <input type="radio" name="difficulty" value="hard"> Hard<br>
+	  <input id="d1" type="radio" name="difficulty" value="easy" checked> Easy<br>
+	  <input id="d2" type="radio" name="difficulty" value="medium"> Medium<br>
+	  <input id="d3" type="radio" name="difficulty" value="hard"> Hard<br>
+
 	  <br>
 	  <input type="submit" value="Submit">
 	</form> 
 </body>
+
+<script type="text/javascript">
+	function parseForm() {
+    var diff = 0;
+    var shipName = document.getElementById("shipName").value;
+    var playerName = document.getElementById("playerName").value;
+    var xhttp = new XMLHttpRequest();
+
+    if (document.getElementById('d1').checked) {
+      diff = 1;
+    } else if (document.getElementById('d1').checked) {
+      diff = 2;
+    } else {
+      diff = 3;
+    }
+
+    xhttp.open("POST", "receiver", true);
+    xhttp.setRequestHeader('Content-Type', 'application/json');
+    xhttp.send(JSON.stringify({
+      'difficulty': diff,
+      'shipName' : shipName,
+      'playerName': playerName
+    }));
+  }
+
+</script>
 </html>
