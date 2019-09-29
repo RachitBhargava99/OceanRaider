@@ -1,5 +1,7 @@
-from flask import Blueprint, request
-from backend.models import User
+from flask import Blueprint, request, redirect, url_for, flash, render_template
+from flask_login import login_user, current_user, logout_user
+from backend.users.forms import RegistrationForm, LoginForm
+from backend.models import User, LoggedInUser
 from backend import db, bcrypt
 import json
 from backend.users.utils import send_reset_email
@@ -10,43 +12,45 @@ users = Blueprint('users', __name__)
 # End-point to enable a user to log in to the website
 @users.route('/login', methods=['GET', 'POST'])
 def login():
-    request_json = request.get_json()
-    email = request_json['email']
-    password = request_json['password']
-    user = User.query.filter_by(email=email).first()
-    if user and bcrypt.check_password_hash(user.password, password):
-        final_dict = {
-            'id': user.id,
-            'auth_token': user.get_auth_token(),
-            'name': user.name,
-            'email': user.email,
-            'isAdmin': user.isAdmin,
-            'status': 1
-        }
-        return json.dumps(final_dict)
-    else:
-        final_dict = {
-            'status': 0,
-            'error': "The provided combination of email and password is incorrect."
-        }
-        return json.dumps(final_dict)
+    if current_user.is_authenticated:
+        return redirect(url_for('events.generate'))
+    form = LoginForm()
+    if form.validate_on_submit():
+        email = form.email.data
+        password = form.password.data
+        user = User.query.filter_by(email=email).first()
+        if user and bcrypt.check_password_hash(user.password, password):
+            logged_in_user = LoggedInUser(user_id=user.id, name=user.name, email=user.email, auth_token=user.get_auth_token())
+            db.session.add(logged_in_user)
+            db.session.commit()
+            login_user(user, remember=form.remember.data)
+            next_page = request.args.get('next')
+            return redirect(next_page) if next_page else redirect(url_for('events.generate'))
+        else:
+            flash("Authentication Failed", 'danger')
+    return render_template('login.html', title='Login', form=form)
 
 
 # End-point to enable a user to register on the website
 @users.route('/register', methods=['GET', 'POST'])
 def normal_register():
-    request_json = request.get_json()
-    if User.query.filter_by(email=request_json['email']).first():
-        return json.dumps({'status': 0, 'output': User.query.filter_by(email=request_json['email']).first().email,
-                          'error': "User Already Exists"})
-    email = request_json['email']
-    hashed_pwd = bcrypt.generate_password_hash(request_json['password']).decode('utf-8')
-    name = request_json['name']
-    # noinspection PyArgumentList
-    user = User(email=email, password=hashed_pwd, name=name, isAdmin=False)
-    db.session.add(user)
-    db.session.commit()
-    return json.dumps({'id': user.id, 'status': 1})
+    if current_user.is_authenticated:
+        return redirect(url_for('events.generate'))
+
+    form = RegistrationForm()
+
+    if User.query.filter_by(email=form.email.data).first():
+        flash("User Already Exists", 'danger')
+    else:
+        email = form.email.data
+        hashed_pwd = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
+        name = form.name.data
+        user = User(email=email, password=hashed_pwd, name=name, isAdmin=False)
+        db.session.add(user)
+        db.session.commit()
+        flash(f'Account created for {user.name}.', 'success')
+        return redirect(url_for('users.login'))
+    return render_template('register.html', title='Register', form=form)
 
 
 # End-point to enable a user to change their access level to administrator

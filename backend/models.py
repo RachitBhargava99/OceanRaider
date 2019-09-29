@@ -1,4 +1,4 @@
-from backend import db
+from backend import db, login_manager
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 from flask_login import UserMixin
 from flask import current_app
@@ -42,11 +42,32 @@ class User(db.Model, UserMixin):
         return f"User ID {self.id}"
 
 
+@login_manager.user_loader
+def load_user(user_id):
+    return LoggedInUser.query.get(int(user_id))
+
+
+class LoggedInUser(db.Model, UserMixin):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    name = db.Column(db.String(127))
+    email = db.Column(db.String(127))
+    auth_token = db.Column(db.String(255))
+
+    def __init__(self, id, name, email, auth_token):
+        self.user_id = id
+        self.name = name
+        self.email = email
+        self.auth_token = auth_token
+
+
 class Port(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     port_id = db.Column(db.Integer, unique=False, nullable=False)
     cargo = db.Column(db.Integer, unique=False, default=0)
     food = db.Column(db.Integer, unique=False, default=0)
+    coor_x = db.Column(db.Integer, default=0)
+    coor_y = db.Column(db.Integer, default=0)
     is_dest = db.Column(db.Boolean, unique=False, default=False)
     game_id = db.Column(db.Integer, db.ForeignKey('game.id'), nullable=False)
 
