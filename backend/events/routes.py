@@ -1,8 +1,9 @@
-from flask import Blueprint, request, current_app
-from backend.models import Port
+from flask import Blueprint, request, current_app, flash, redirect, url_for
+from backend.models import Port, Game
+from flask_login import current_user
 from backend import db, mail
-from utils import create_ship, create_port
-import db
+from backend.events.utils import create_ship, create_port
+import random
 import json
 import requests
 from datetime import datetime
@@ -16,34 +17,32 @@ events = Blueprint('queues', __name__)
 def checker():
     return "Hello"
 
+
 """
 Generates a game with the game info
 """
-@events.route('/generate', methods=['GET','POST'])
+@events.route('/generate', methods=['GET'])
 def generate():
-	playerData = request.get_json()
-	game_id = playerData["gameId"]
-	dests = [create_port(is_dest=True, game_id=game_id) for i in range(30)]
-	ports = [create_port(is_dest=False, game_id=game_id) for i in range(9)]
-	ships = []
-	for dest in dests:
-		num = random.randange(0,3)
-		if num % 2 == 0:
-			ships.append(create_ship(dest.port_id))
+    if current_user.is_authenticated:
+        user_id = current_user.user_id
+        new_game = Game(user_id=user_id)
+        game_id = new_game.id
+        dests = [create_port(is_dest=True, game_id=game_id) for i in range(30)]
+        ports = [create_port(is_dest=False, game_id=game_id) for i in range(9)]
+        ships = []
+        num_ships = 0
 
-	for dest in dests:
-		db.session.add(dest)
+        for dest in dests:
+            num = random.randrange(0, 3)
+            if num % 2 == 0:
+                ships.append(create_ship(dest.port_id, num_ships))
+                num_ships += 1
 
-	for port in ports:
-		db.session.add(port)
+        [db.session.add(obj) for obj in (dests + ports + ships)]
 
-	for ship in ships:
-		db.session.add(ship)
+        db.session.commit()
+        return redirect(url_for('events.checker'))
 
-	db.session.commit()
-	return True
-
-
-
-
-
+    else:
+        flash("You must be logged in to proceed.", 'danger')
+        return redirect(url_for('users.login'))
