@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+</head>
+<body>
+
+	<h2>Welcome to Ocean Raider</h2>
+
+	<button onclick="sendGame()">Start</button>
+</body>
+
+<script type="text/javascript">
+	function sendGame() {
+
+    xhttp.open("GET", "generate", true);
+    xhttp.setRequestHeader('Content-Type', 'application/json');
+    xhttp.send(JSON.stringify({
+      'gameId': 4
+    }));
+  }
+
+</script>
+</html>
