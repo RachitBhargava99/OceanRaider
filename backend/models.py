@@ -65,11 +65,9 @@ class Port(db.Model):
     port_id = db.Column(db.Integer, unique=False, nullable=False)
     cargo = db.Column(db.Integer, unique=False, default=0)
     food = db.Column(db.Integer, unique=False, default=0)
-    coor_x = db.Column(db.Integer, default=0)
-    coor_y = db.Column(db.Integer, default=0)
     is_dest = db.Column(db.Boolean, unique=False, default=False)
-    x_coord = db.Column(db.Integer, unique=False, default=False)
-    y_coord = db.Column(db.Integer, unique=False, default=False)
+    x_coord = db.Column(db.Integer, unique=False, default=0)
+    y_coord = db.Column(db.Integer, unique=False, default=0)
     game_id = db.Column(db.Integer, db.ForeignKey('game.id'), nullable=False)
 
 
