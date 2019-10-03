@@ -18,7 +18,7 @@ def create_app():
 
     db.init_app(app)
     bcrypt.init_app(app)
-##    login_manager.init_app(app)
+    login_manager.init_app(app)
     mail.init_app(app)
 
     from backend.events.routes import events
