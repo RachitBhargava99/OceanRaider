@@ -9,7 +9,7 @@ import requests
 from datetime import datetime
 from flask_mail import Message
 
-events = Blueprint('queues', __name__)
+events = Blueprint('events', __name__)
 
 
 # Checker to see whether or not is the server running

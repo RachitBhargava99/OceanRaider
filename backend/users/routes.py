@@ -20,7 +20,7 @@ def login():
         password = form.password.data
         user = User.query.filter_by(email=email).first()
         if user and bcrypt.check_password_hash(user.password, password):
-            logged_in_user = LoggedInUser(user_id=user.id, name=user.name, email=user.email, auth_token=user.get_auth_token())
+            logged_in_user = LoggedInUser(id=user.id, name=user.name, email=user.email, auth_token=user.get_auth_token())
             db.session.add(logged_in_user)
             db.session.commit()
             login_user(user, remember=form.remember.data)
@@ -42,14 +42,15 @@ def normal_register():
     if User.query.filter_by(email=form.email.data).first():
         flash("User Already Exists", 'danger')
     else:
-        email = form.email.data
-        hashed_pwd = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
-        name = form.name.data
-        user = User(email=email, password=hashed_pwd, name=name, isAdmin=False)
-        db.session.add(user)
-        db.session.commit()
-        flash(f'Account created for {user.name}.', 'success')
-        return redirect(url_for('users.login'))
+        if form.validate_on_submit():
+            email = form.email.data
+            hashed_pwd = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
+            name = form.name.data
+            user = User(email=email, password=hashed_pwd, name=name, isAdmin=False)
+            db.session.add(user)
+            db.session.commit()
+            flash(f'Account created for {user.name}.', 'success')
+            return redirect(url_for('users.login'))
     return render_template('register.html', title='Register', form=form)
 
 
