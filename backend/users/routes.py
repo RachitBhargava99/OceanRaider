@@ -13,7 +13,7 @@ users = Blueprint('users', __name__)
 @users.route('/login', methods=['GET', 'POST'])
 def login():
     if current_user.is_authenticated:
-        return redirect(url_for('events.generate'))
+        return redirect(url_for('events.show_game'))
     form = LoginForm()
     if form.validate_on_submit():
         email = form.email.data
@@ -25,7 +25,7 @@ def login():
             db.session.commit()
             login_user(user, remember=form.remember.data)
             next_page = request.args.get('next')
-            return redirect(next_page) if next_page else redirect(url_for('events.generate'))
+            return redirect(next_page) if next_page else redirect(url_for('events.show_game'))
         else:
             flash("Authentication Failed", 'danger')
     return render_template('login.html', title='Login', form=form)
