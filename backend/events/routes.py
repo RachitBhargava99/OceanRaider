@@ -1,4 +1,4 @@
-from flask import Blueprint, request, current_app, flash, redirect, url_for
+from flask import Blueprint, request, current_app, flash, redirect, url_for, render_template
 from backend.models import Port, Game
 from flask_login import current_user
 from backend import db, mail
@@ -49,3 +49,21 @@ def generate():
     else:
         flash("You must be logged in to proceed.", 'danger')
         return redirect(url_for('users.login'))
+
+@events.route('/loadgame', methods=['GET'])
+def load_game(game_id):
+    game = Game.query.filter_by(id=game_id)
+    
+
+@events.route('/gamepage', methods=['GET'])
+def show_game():
+    return render_template("gamepage.html")
+
+
+
+
+
+
+
+
+
