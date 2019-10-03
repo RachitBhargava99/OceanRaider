@@ -9,7 +9,7 @@ import requests
 from datetime import datetime
 from flask_mail import Message
 
-events = Blueprint('queues', __name__)
+events = Blueprint('events', __name__)
 
 
 # Checker to see whether or not is the server running
@@ -26,7 +26,10 @@ def generate():
     if current_user.is_authenticated:
         user_id = current_user.user_id
         new_game = Game(user_id=user_id)
+        db.session.add(new_game)
+        db.session.commit()
         game_id = new_game.id
+        print(game_id)
         dests = [create_port(is_dest=True, game_id=game_id) for i in range(30)]
         ports = [create_port(is_dest=False, game_id=game_id) for i in range(9)]
         ships = []
@@ -35,7 +38,7 @@ def generate():
         for dest in dests:
             num = random.randrange(0, 3)
             if num % 2 == 0:
-                ships.append(create_ship(dest.port_id, num_ships))
+                ships.append(create_ship(dest.port_id, num_ships, game_id))
                 num_ships += 1
 
         [db.session.add(obj) for obj in (dests + ports + ships)]

@@ -19,7 +19,7 @@ class Config:
 #        'mysql+pymysql://{user}:{password}@localhost/{database}?unix_socket=/cloudsql/{connection_name}').format(
 #        user=CLOUDSQL_USER, password=CLOUDSQL_PASSWORD, database=CLOUDSQL_DATABASE,
 #        connection_name=CLOUDSQL_CONNECTION_NAME)
-    SQLALCHEMY_DATABASE_URL = 'sqlite:///' + os.path.join(basedir, 'app.db')
+    SQLALCHEMY_DATABASE_URI = 'sqlite:////' + os.path.join(basedir, 'app.db')
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     BASE_URL = 'https://images-api.nasa.gov/'
     SEARCH_URL = 'search'
