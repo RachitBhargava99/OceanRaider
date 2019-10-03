@@ -63,7 +63,8 @@ def show_games():
         flash("You must be logged in to proceed.", 'danger')
         return redirect(url_for('users.login'))
 
-@events.route('/loadgame', methods=['GET'])
+
+@events.route('/loadgame/<int:game_id>', methods=['GET'])
 def load_game(game_id):
     game = Game.query.filter_by(id=game_id)
     
