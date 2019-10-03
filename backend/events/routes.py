@@ -1,4 +1,4 @@
-from flask import Blueprint, request, current_app, flash, redirect, url_for
+from flask import Blueprint, request, current_app, flash, redirect, url_for, render_template
 from backend.models import Port, Game
 from flask_login import current_user
 from backend import db, mail
@@ -44,7 +44,20 @@ def generate():
         [db.session.add(obj) for obj in (dests + ports + ships)]
 
         db.session.commit()
-        return redirect(url_for('events.checker'))
+        return redirect(url_for('events.show_games'))
+
+    else:
+        flash("You must be logged in to proceed.", 'danger')
+        return redirect(url_for('users.login'))
+
+
+@events.route('/games', methods=['GET'])
+def show_games():
+    if current_user.is_authenticated:
+        user_id = current_user.user_id
+        all_player_games = Game.query.filter_by(user_id=user_id)
+        game_ids = [game.id for game in all_player_games]
+        return render_template('gamepage.html', ids=game_ids)
 
     else:
         flash("You must be logged in to proceed.", 'danger')
