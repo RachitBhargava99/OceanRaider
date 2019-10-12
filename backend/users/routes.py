@@ -25,7 +25,7 @@ def login():
             db.session.commit()
             login_user(user, remember=form.remember.data)
             next_page = request.args.get('next')
-            return redirect(next_page) if next_page else redirect(url_for('events.show_game'))
+            return redirect(next_page) if next_page else redirect(url_for('events.show_games'))
         else:
             flash("Authentication Failed", 'danger')
     return render_template('login.html', title='Login', form=form)
@@ -52,6 +52,13 @@ def normal_register():
             flash(f'Account created for {user.name}.', 'success')
             return redirect(url_for('users.login'))
     return render_template('register.html', title='Register', form=form)
+
+
+@users.route('/logout', methods=['GET'])
+def logout():
+    logout_user()
+    flash("User Logged Out Successfully", 'success')
+    return redirect(url_for('users.login'))
 
 
 # End-point to enable a user to change their access level to administrator
