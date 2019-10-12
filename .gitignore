@@ -35,5 +35,5 @@ __pycache__/
 # Ignoring test files upload
 tests/
 
-# Ignoring db file
-*/app.db
+# Ignoring db files
+*.db
