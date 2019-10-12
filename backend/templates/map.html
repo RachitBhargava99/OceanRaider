@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <title>sign up</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!--===============================================================================================-->
+    <link rel="icon" type="image/png" href="static/log/images/icons/favicon.ico"/>
+  <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="static/log/vendor/bootstrap/css/bootstrap.min.css">
+  <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="static/log/fonts/font-awesome-4.7.0/css/font-awesome.min.css">
+  <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="static/log/fonts/iconic/css/material-design-iconic-font.min.css">
+  <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="static/log/vendor/animate/animate.css">
+  <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="static/log/vendor/css-hamburgers/hamburgers.min.css">
+  <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="static/log/vendor/animsition/css/animsition.min.css">
+  <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="static/log/vendor/select2/select2.min.css">
+  <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="static/log/vendor/daterangepicker/daterangepicker.css">
+  <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="static/log/css/util.css">
+    <link rel="stylesheet" type="text/css" href="static/log/css/main.css">
+  <!--===============================================================================================-->
+      <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <!--===============================================================================================-->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.5.1/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.5.1/dist/leaflet.js"></script>
+  </head>
+  <style type="text/css">
+    html, body {
+      height: 100%;
+    }
+
+    .full-height {
+      height: 100%;
+
+    }
+
+    #image-map {
+      width: 80%;
+      height: 100%;
+      border: 1px solid #ccc;
+      margin-bottom: 10px;
+      float: left;
+    }
+    #score {
+      float: right;
+      width: 20%
+    }
+  </style>
+  <body>
+    <div class="full-height">
+      <div id="image-map"></div>
+      <div id="score">
+        <h2>Life: {{ship.life_points}}</h2>
+        <h2>Food: {{ship.food}}</h2>
+        <h2>Cargo: {{ship.cargo}}</h2>
+        <h2>Cannon: {{ship.cannon}}</h2>
+        <h2>Crew: {{ship.crew}}</h2>
+      </div>
+    </div>
+    
+  </body>
+  <script type="text/javascript">
+
+
+    var PortIcon = L.Icon.extend({
+      options: {
+        iconSize:     [38, 45],
+        shadowSize:   [50, 64],
+        iconAnchor:   [22, 94],
+        shadowAnchor: [4, 62],
+        popupAnchor:  [-3, -76]
+      }
+    });
+
+    var StarIcon = L.Icon.extend({
+      options: {
+        iconSize:     [38, 45],
+        shadowSize:   [50, 64],
+        iconAnchor:   [22, 94],
+        shadowAnchor: [4, 62],
+        popupAnchor:  [-3, -76]
+      }
+    });
+
+    var blackIcon = new PortIcon({iconUrl: 'https://image.flaticon.com/icons/png/512/34/34701.png'});
+    var starIcon = new StarIcon({iconUrl: "https://iconsplace.com/wp-content/uploads/_icons/800080/256/png/rating-star-icon-13-256.png"});
+
+    var map = L.map('image-map', {
+      minZoom: 1,
+      maxZoom: 4,
+      center: [0, 0],
+      zoom: 1,
+      crs: L.CRS.Simple
+    });
+    // dimensions and url of the image
+    var w = 4000,
+        h = 4000,
+        url = 'https://media.istockphoto.com/photos/vintage-retro-grungy-background-design-and-pattern-texture-picture-id656453072?k=6&m=656453072&s=612x612&w=0&h=4TW6UwMWJrHwF4SiNBwCZfZNJ1jVvkwgz3agbGBihyE=';
+    
+    //var marker = L.marker([-100, 100]).addTo(map);
+    {% for port in ports %}
+      {% if port.port_id == ship.home_port %}
+        var marker{{port.port_id}} = L.marker([({{port.x_coord}} - 30)*8, ({{port.y_coord}} + 30)*8], {icon: starIcon}).addTo(map);
+      {% else %}
+        var marker{{port.port_id}} = L.marker([({{port.x_coord}} - 30)*8, ({{port.y_coord}} + 30)*8], {icon: blackIcon}).addTo(map);
+      {% endif %}
+
+    {% endfor %}
+
+    // calculate the edges of the image, in coordinate space
+    var southWest = map.unproject([0, h], map.getMaxZoom()-1);
+    var northEast = map.unproject([w, 0], map.getMaxZoom()-1);
+    var bounds = new L.LatLngBounds(southWest, northEast);
+    L.imageOverlay(url, bounds).addTo(map);
+    map.setMaxBounds(bounds);
+
+  </script>>
+</html>
