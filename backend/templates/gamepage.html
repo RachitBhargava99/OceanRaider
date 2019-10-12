@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <title>sign up</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!--===============================================================================================-->
+    <link rel="icon" type="image/png" href="static/log/images/icons/favicon.ico"/>
+  <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="static/log/vendor/bootstrap/css/bootstrap.min.css">
+  <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="static/log/fonts/font-awesome-4.7.0/css/font-awesome.min.css">
+  <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="static/log/fonts/iconic/css/material-design-iconic-font.min.css">
+  <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="static/log/vendor/animate/animate.css">
+  <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="static/log/vendor/css-hamburgers/hamburgers.min.css">
+  <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="static/log/vendor/animsition/css/animsition.min.css">
+  <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="static/log/vendor/select2/select2.min.css">
+  <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="static/log/vendor/daterangepicker/daterangepicker.css">
+  <!--===============================================================================================-->
+    <link rel="stylesheet" type="text/css" href="static/log/css/util.css">
+    <link rel="stylesheet" type="text/css" href="static/log/css/main.css">
+  <!--===============================================================================================-->
+      <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-mcw98/sfnge8fjt3gxweongsv7zt27nxfoaoapmym81iuxopkfojwj8erdknlpmo" crossorigin="anonymous">
+  <!--===============================================================================================-->
+  </head>
+  <body>
+    <div class="card-deck">
+      <div class="card">
+        <img src="https://techcrunch.com/wp-content/uploads/2010/10/pirate.jpg" class="card-img-top" alt="...">
+        <div class="card-body">
+          <h5 class="card-title">start new game</h5>
+          <p class="card-text">this is a longer card with supporting text below as a natural lead-in to additional content. this content is a little bit longer.</p>
+          <p class="card-text"><small class="text-muted">last updated 3 mins ago</small></p>
+          <a href="/generate" class="btn btn-primary">start game</a>
+        </div>
+      </div>
+      {% for id in ids %}
+      <div class="card">
+        <img src="https://techcrunch.com/wp-content/uploads/2010/10/pirate.jpg" class="card-img-top" alt="...">
+        <div class="card-body">
+          <h5 class="card-title">Game ID {{ id }}</h5>
+          <p class="card-text">this is a longer card with supporting text below as a natural lead-in to additional content. this content is a little bit longer.</p>
+          <p class="card-text"><small class="text-muted">last updated 3 mins ago</small></p>
+          <a href="/loadgame/{{ id }}" class="btn btn-primary">load game</a>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </body>
+  <script type="text/javascript">
+    
+
+
+
+
+  </script>>
+</html>
