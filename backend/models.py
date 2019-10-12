@@ -53,6 +53,7 @@ class LoggedInUser(db.Model, UserMixin):
     name = db.Column(db.String(127))
     email = db.Column(db.String(127))
     auth_token = db.Column(db.String(255))
+    game_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False, default=-1)
 
     def __init__(self, id, name, email, auth_token):
         self.user_id = id
@@ -80,8 +81,10 @@ class Ship(db.Model):
     crew = db.Column(db.Integer, unique=False, default=1)
     food = db.Column(db.Integer, unique=False, default=0)
     speed = db.Column(db.Integer, unique=False, default=1)
+    coin = db.Column(db.Integer, unique=False, default=10)
     is_bot = db.Column(db.Boolean, unique=False, default=False)
     home_port = db.Column(db.Integer, db.ForeignKey('port.port_id'), unique=False, default=0)
+    curr_port = db.Column(db.Integer, db.ForeignKey('port.port_id'), unique=False, default=0)
     game_id = db.Column(db.Integer, db.ForeignKey('game.id'), nullable=False)
 
 
